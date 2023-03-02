@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>我的上报（指标）</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" th:href="@{/X-admin/css/font.css}">
+    <link rel="stylesheet" th:href="@{/X-admin/css/xadmin.css}">
+    <!-- jQuery -->
+    <script type="text/javascript" th:src="@{/X-admin/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/X-admin/js/xadmin.js}" charset="utf-8"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" name="detail" placeholder="搜索" autocomplete="off"
+                                   class="layui-input"></div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="search_btn">
+                                <i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+                           onclick="reload();" title="刷新">
+                            <i class="layui-icon layui-icon-refresh" style="line-height:10px"></i></a>
+                    </form>
+                </div>
+                <div class="layui-card-body ">
+                    <table id="status" lay-filter="statusFilter"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="hint">
+    <button class="layui-btn layui-btn-sm" lay-event="add">上报</button>
+    <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="delete">作废</button>
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.config({
+        base: '/tablePlug/' //存放拓展模块的目录
+    }).extend({
+        tablePlug: 'tablePlug'//拓展模块名
+    }).use(['tablePlug', 'table', 'form', 'layer', 'laypage'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            layer = layui.layer;
+        var tableIns = table.render({
+            elem: '#status'
+            , height: 730
+            , width: '100%'
+            , url: '/status/myList'//数据接口
+            , loading: false//转圈动画
+            , colFilterRecord: true//是否开启字段筛选的记忆功能
+            , smartReloadModel: true//重载不闪
+            , toolbar: '#hint'
+            , page: {
+                layout: ['limit', 'limits', 'count', 'prev', 'page', 'next', 'skip']
+                , limit: 14
+                , limits: [14, 20, 30, 40, 50]
+            }
+            , cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                , {field: 'id', title: '序号', width: 100, sort: true}
+                , {field: 'time', title: '时间', width: 300, sort: true, templet:'<div>{{ layui.util.toDateString(d.time, "yyyy-MM-dd HH:mm:ss") }}</div>'}
+                , {field: 'oid', title: '手术编号', width: 150, sort: true}
+                , {field: 'pname', title: '患者姓名', width: 150, sort: true}
+                , {field: 'systolicPressure', title: '收缩压', width: 100, sort: true}
+                , {field: 'diastolicPressure', title: '舒张压', width: 100, sort: true}
+                , {field: 'heartRate', title: '心率', width: 100, sort: true}
+                , {field: 'breath', title: '呼吸频率', width: 100, sort: true}
+                , {field: 'temperature', title: '体温', width: 100, sort: true}
+                , {field: 'spo2', title: '氧饱和', width: 100, sort: true}
+                , {field: 'wasted', title: '已作废', width: 100, sort: true}
+            ]]
+        });
+        //搜索
+        form.on('submit(search_btn)', function (data) {
+            var datas = data.field;
+            for (var property in datas) {
+                if (datas[property] === "") {
+                    delete datas[property];
+                }
+            }
+            tableIns.reload({
+                where: data.field
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            return false;
+        });
+        //头工具栏事件
+        table.on('toolbar(statusFilter)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id)
+                    , data = checkStatus.data;
+                switch (obj.event) {
+                    case 'add':
+                        xadmin.open('上报信息', '/status/add', 460, 650);
+                        break;
+                    case 'delete':
+                        if (data.length != 1)
+                            layer.msg("请选中一条信息");
+                        else {
+                            var statuss = [];
+                            for (var i = 0; i < data.length; i++) {
+                                statuss = statuss + "," + checkStatus.data[i].id;
+                            }
+                            layer.confirm('确定作废？', {icon: 3, title: '确认'}, function () {
+                                $.post({
+                                    data: {"statuss": statuss},
+                                    url: '/status/delete?id=' + checkStatus.data[0].id,
+                                    success: function () {
+                                        tableIns.reload({
+                                            page: {
+                                                curr: 1 //重新从第 1 页开始
+                                            }
+                                        });
+                                        layer.msg("成功");
+                                    }
+                                });
+                            });
+                        }
+                }
+            }
+        );
+    });
+    function reload() {
+        location.reload();
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<page-header [title]="'手术信息'"> </page-header>
+<nz-card [nzBordered]="false">
+  <div nz-col nzSpan="24">
+    <div nz-row>
+      <p style="margin-top:20px;font-size: 19px;font-weight: 500;float:right">
+        {{ now | date: 'hh:mm:ss' }}
+      </p>
+    </div>
+    <div nz-row>
+      <p style="font-size:14px;margin-top: -20px;float:right">{{ now | date: 'yyyy-MM- dd' }}</p>
+    </div>
+  </div>
+  <nz-table #rowSelectionTable [nzLoading]="loading" [nzData]="dataSet" [nzShowPagination]="false">
+    <thead>
+      <tr>
+        <th>手术室</th>
+        <th>科室</th>
+        <th>床位号</th>
+        <th>患者姓名</th>
+        <th>手术名称</th>
+        <th>麻醉医师</th>
+        <th>巡回护士</th>
+        <th>施术者</th>
+        <th>协助者</th>
+        <th>状态</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataSet" (click)="clickTr(data, $event)">
+        <td>{{ data.location }}</td>
+        <th>{{ data.dept }}</th>
+        <th>{{ data.bed }}</th>
+        <td>{{ data.pname }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.anesthesiologist }}</td>
+        <td>{{ data.circulatingNurse }}</td>
+        <td>{{ data.operator }}</td>
+        <td>{{ data.supporter }}</td>
+        <td>{{ data.status }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>

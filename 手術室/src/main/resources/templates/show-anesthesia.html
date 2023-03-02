@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>麻醉记录相关信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" th:href="@{/X-admin/css/font.css}">
+    <link rel="stylesheet" th:href="@{/X-admin/css/xadmin.css}">
+    <!-- jQuery -->
+    <script type="text/javascript" th:src="@{/X-admin/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/X-admin/js/xadmin.js}" charset="utf-8"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" name="detail" placeholder="搜索" autocomplete="off"
+                                   class="layui-input"></div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <button class="layui-btn" lay-submit="" lay-filter="search_btn">
+                                <i class="layui-icon">&#xe615;</i></button>
+                        </div>
+                        <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+                           onclick="reload();" title="刷新">
+                            <i class="layui-icon layui-icon-refresh" style="line-height:10px"></i></a>
+                    </form>
+                </div>
+                <div class="layui-card-body ">
+                    <table id="operation" lay-filter="operationFilter"></table>
+                </div>
+                <div class="layui-card-body ">
+                    <table id="status" lay-filter="statusFilter"></table>
+                </div>
+            </div>
+            <div id="main" style="width: 100%;height:400px;"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+    layui.config({
+        base: '/tablePlug/' //存放拓展模块的目录
+    }).extend({
+        tablePlug: 'tablePlug'//拓展模块名
+    }).use(['tablePlug', 'table', 'form', 'layer', 'laypage'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            table = layui.table,
+            oid = [[${oid}]],
+            layer = layui.layer;
+        var tableIns1 = table.render({
+            elem: '#operation'
+            , height: 151
+            , width: '100%'
+            , url: '/operation/this' //数据接口
+            , where: {id: oid}
+            , colFilterRecord: true//是否开启字段筛选的记忆功能
+            , toolbar: '#hint'
+            , page: false
+            , cols: [[ //表头
+                {field: 'id', title: '序号', width: 120}
+                , {field: 'name', title: '手术名称', width: 190}
+                , {field: 'dept', title: '科室', width: 100}
+                , {field: 'pname', title: '患者姓名', width: 200}
+                , {field: 'location', title: '手术室', width: 75}
+                , {field: 'operator', title: '施术者', width: 190}
+                , {field: 'startTime', title: '开始时间', width: 160,templet:'<div>{{ layui.util.toDateString(d.startTime, "yyyy-MM-dd HH:mm:ss") }}</div>'}
+                , {field: 'endTime', title: '结束时间', width: 160,templet:'<div>{{ layui.util.toDateString(d.endTime, "yyyy-MM-dd HH:mm:ss") }}</div>'}
+            ]]
+        });
+        var tableIns = table.render({
+            elem: '#status'
+            , height: 730
+            , width: '100%'
+            , url: '/status/operationList'//数据接口
+            , where: {oid: oid}
+            , loading: false//转圈动画
+            , colFilterRecord: true//是否开启字段筛选的记忆功能
+            , smartReloadModel: true//重载不闪
+            , toolbar: '#hint'
+            , page: {
+                layout: ['limit', 'limits', 'count', 'prev', 'page', 'next', 'skip']
+                , limit: 14
+                , limits: [14, 20, 30, 40, 50]
+            }
+            , cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                , {field: 'time', title: '时间', width: 300, templet:'<div>{{ layui.util.toDateString(d.time, "yyyy-MM-dd HH:mm:ss") }}</div>', sort: true}
+                , {field: 'systolicPressure', title: '收缩压', width: 120, sort: true}
+                , {field: 'diastolicPressure', title: '舒张压', width: 120, sort: true}
+                , {field: 'heartRate', title: '心率', width: 120, sort: true}
+                , {field: 'breath', title: '呼吸频率', width: 150, sort: true}
+                , {field: 'temperature', title: '体温', width: 120, sort: true}
+                , {field: 'spo2', title: '氧饱和', width: 120, sort: true}
+            ]]
+        });
+        //搜索
+        form.on('submit(search_btn)', function (data) {
+            var datas = data.field;
+            for (var property in datas) {
+                if (datas[property] === "") {
+                    delete datas[property];
+                }
+            }
+            tableIns.reload({
+                where: data.field
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+            return false;
+        });
+    });
+    function reload() {
+        location.reload();
+    }
+</script>
+<script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    var option = {
+        title: {
+            text: '指标参数折线图'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['收缩压','舒张压','心率','呼吸频率','体温','氧饱和']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['12:13','12:14','12:15','12:16','12:17','12:18','12:19']
+            // data: []
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name:'收缩压',
+                type:'line',
+                data:[119, 119, 122, 122, 122, 122, 122]
+                // data: []
+            },
+            {
+                name:'舒张压',
+                type:'line',
+                data:[86, 86, 89, 89, 89, 89, 89]
+                // data: []
+            },
+            {
+                name:'心率',
+                type:'line',
+                data:[75, 75, 80, 80, 80, 80, 80]
+                // data: []
+            },
+            {
+                name:'呼吸频率',
+                type:'line',
+                data:[37, 37, 40, 40, 40, 40, 40]
+                // data: []
+            },
+            {
+                name:'体温',
+                type:'line',
+                data:[36.3, 36.3, 36.5, 36.5, 36.5, 36.5, 36.5]
+                // data: []
+            },
+            {
+                name:'氧饱和',
+                type:'line',
+                data:[99, 99, 98, 98, 98, 98, 98]
+                // data: []
+            }
+        ]
+    };
+    // // 异步加载数据
+    // $.get('/status/showData').done(function (data) {
+    //     // 填入数据
+    //     myChart.setOption({
+    //         xAxis: {
+    //             data: data.reportTime
+    //         },
+    //         series: [{
+    //             // 根据名字对应到相应的系列
+    //             name: '收缩压',
+    //             data: data.systolicPressure
+    //         }]
+    //     });
+    // });
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+</script>
+</body>
+</html>

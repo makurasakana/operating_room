@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>当前手术</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" th:href="@{/X-admin/css/font.css}">
+    <link rel="stylesheet" th:href="@{/X-admin/css/xadmin.css}">
+    <!-- jQuery -->
+    <script type="text/javascript" th:src="@{/X-admin/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/X-admin/js/xadmin.js}" charset="utf-8"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>手术详情</legend>
+        </fieldset>
+
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">基本信息</div>
+                <div class="layui-card-body ">
+                    <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>手术室</h3>
+                                <p><cite th:text="${operation.location}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a  onclick="xadmin.open('患者信息', '/my-operation/patient?id=1', 1200, 800)"class="x-admin-backlog-body">
+                                <!--th:href="@{'/my-operation/patient?id='+${operation.pid}}"-->
+                                <h3>患者姓名</h3>
+                                <p><cite th:text="${operation.pname}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>手术状态</h3>
+                                <p><cite th:text="${operation.status}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>开始时间</h3>
+                                <p><cite th:text="${#dates.format(operation.startTime,'yyyy-MM-dd HH:mm:ss')}" ></cite></p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">手术详情</div>
+                <div class="layui-card-body ">
+                    <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>手术名</h3>
+                                <p><cite th:text="${operation.name}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>术前诊断</h3>
+                                <p><cite th:text="${operation.diagnose}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>科室</h3>
+                                <p><cite th:text="${operation.dept}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>床位号</h3>
+                                <p><cite th:text="${operation.bed}"></cite></p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">医护人员</div>
+                <div class="layui-card-body ">
+                    <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <!--<a th:href="@{'/my-operation/medical-worker?name='+${operation.anesthesiologist}}" class="x-admin-backlog-body">-->
+                                <a  onclick="xadmin.open('医护人员信息', '/my-operation/medical-worker?name=李四', 1200, 800)"class="x-admin-backlog-body">
+                                <h3>麻醉医师</h3>
+                                <p><cite th:text="${operation.anesthesiologist}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <!--<a th:href="@{'/my-operation/medical-worker?name='+${operation.circulatingNurse}}" class="x-admin-backlog-body">-->
+                            <a  onclick="xadmin.open('医护人员信息', '/my-operation/medical-worker?name=张三', 1200, 800)"class="x-admin-backlog-body">
+                                <h3>巡回护士</h3>
+                                <p><cite th:text="${operation.circulatingNurse}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <!--<a th:href="@{'/my-operation/medical-worker?name='+${operation.operator}}" class="x-admin-backlog-body">-->
+                            <a  onclick="xadmin.open('医护人员信息', '/my-operation/medical-worker?name=王五', 1200, 800)"class="x-admin-backlog-body">
+                                <h3>释术者</h3>
+                                <p><cite th:text="${operation.operator}"></cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs6">
+                            <a href="javascript:;" class="x-admin-backlog-body">
+                                <h3>协助者</h3>
+                                <p><cite th:text="${operation.supporter}"></cite></p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

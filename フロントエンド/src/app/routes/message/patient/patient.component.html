@@ -1,0 +1,98 @@
+<page-header [title]="'患者信息管理'">
+  <form nz-form [nzLayout]="'inline'">
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">姓名</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <input nz-input [(ngModel)]="_searchUsername" />
+      </nz-form-control>
+    </nz-form-item>
+    <button nz-button nzType="primary" (click)="submitForm()" style="margin-top: 4px;">
+      搜索
+    </button>
+    <button nz-button type="button" (click)="resetInfo()" class="mx-sm"><i nz-icon type="redo"></i>重置</button>
+  </form>
+</page-header>
+<nz-card [nzBordered]="false">
+  <div class="it-group">
+    <div>
+      <button [disabled]="selectIds.length !== 1" nz-button (click)="detail()">
+        <i nz-icon type="info" nzTheme="outline"></i>
+        查看详细病史
+      </button>
+    </div>
+  </div>
+  <nz-table #rowSelectionTable [nzLoading]="loading" [nzData]="dataSet" [nzShowPagination]="false">
+    <thead (nzSortChange)="sortChange($event)">
+      <tr>
+        <th
+          nzShowCheckbox
+          [(nzChecked)]="allChecked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="checkAll($event)"
+        ></th>
+        <th nzShowSort nzSortKey="id">住院号</th>
+        <th nzShowSort nzSortKey="idCard">身份证号</th>
+        <th nzShowSort nzSortKey="name">姓名</th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfGender"
+          (nzFilterChange)="filter($event, searchDept, searchState)"
+        >
+          性别
+        </th>
+        <th nzShowSort nzSortKey="age">年龄</th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfDept"
+          (nzFilterChange)="filter(searchGender, $event, searchState)"
+        >
+          科室
+        </th>
+        <th nzShowSort nzSortKey="bed">床位号</th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfState"
+          (nzFilterChange)="filter(searchGender, searchDept, $event)"
+        >
+          状态
+        </th>
+        <th nzShowSort nzSortKey="allergy">药物过敏史</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataSet" (click)="clickTr(data, $event)">
+        <td
+          nzWidth="70px"
+          nzLeft="0px"
+          nzShowCheckbox
+          [(nzChecked)]="data.checked"
+          (nzCheckedChange)="refreshStatus()"
+        ></td>
+        <td>{{ data.id }}</td>
+        <td>{{ data.idCard }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.sex }}</td>
+        <td>{{ data.age }}</td>
+        <th>{{ data.dept }}</th>
+        <th>{{ data.bed }}</th>
+        <td>{{ data.state }}</td>
+        <td>{{ data.allergy }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div *ngIf="rowSelectionTable.data.length > 0" class="paging">
+    <p>共 {{ totalAmount }} 条</p>
+    <div class="flex1"></div>
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzPageSize]="perPage"
+      (nzPageSizeChange)="pageSizeChange($event)"
+      (nzPageIndexChange)="pageIndexChange($event)"
+      nzShowSizeChanger
+      [nzTotal]="totalAmount"
+    ></nz-pagination>
+  </div>
+</nz-card>

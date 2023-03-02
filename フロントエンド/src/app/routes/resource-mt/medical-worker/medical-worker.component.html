@@ -1,0 +1,105 @@
+<page-header [title]="'医护人员信息管理'">
+  <form nz-form [nzLayout]="'inline'">
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">姓名</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <input nz-input [(ngModel)]="_searchUsername" />
+      </nz-form-control>
+    </nz-form-item>
+    <button nz-button nzType="primary" (click)="submitForm()" style="margin-top: 4px;">搜索</button>
+    <button nz-button type="button" (click)="resetInfo()" class="mx-sm"><i nz-icon type="redo"></i>重置</button>
+  </form>
+</page-header>
+<nz-card [nzBordered]="false">
+  <div class="it-group">
+    <div>
+      <button nz-button type="submit" [nzType]="'primary'" (click)="add()">
+        <i nz-icon type="plus" theme="outline"></i>
+        添加
+      </button>
+    </div>
+  </div>
+  <nz-table #rowSelectionTable [nzLoading]="loading" [nzData]="dataSet" [nzShowPagination]="false">
+    <thead (nzSortChange)="sortChange($event)">
+      <tr>
+        <th
+          nzShowCheckbox
+          [(nzChecked)]="allChecked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="checkAll($event)"
+        ></th>
+        <th nzShowSort nzSortKey="id">序号</th>
+        <th>姓名</th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfGender"
+          (nzFilterChange)="filter($event, searchPosition, searchDept)"
+        >
+          性别
+        </th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfPosition"
+          (nzFilterChange)="filter(searchGender, $event, searchDept)"
+        >
+          职位
+        </th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfDept"
+          (nzFilterChange)="filter(searchGender, searchPosition, $event)"
+        >
+          科室
+        </th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataSet" (click)="clickTr(data, $event)">
+        <td nzLeft="0px" nzShowCheckbox [(nzChecked)]="data.checked" (click)="refreshStatusE($event)"></td>
+        <td>{{ data.id }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.sex }}</td>
+        <td>{{ data.position }}</td>
+        <td>{{ data.dept }}</td>
+        <td>
+          <a
+            (click)="edit(data)"
+            style="padding-right: 8px"
+            nz-tooltip
+            nzTooltipTitle="编辑"
+            nzTooltipPlacement="bottom"
+          >
+            <i nz-icon nzType="edit" nzTheme="outline"></i>
+          </a>
+          <a
+            (nzOnConfirm)="del(data)"
+            nz-popconfirm
+            nzPopconfirmTitle="确定删除?"
+            nzPopconfirmPlacement="bottom"
+            nz-tooltip
+            nzTooltipTitle="删除"
+            nzTooltipPlacement="bottom"
+          >
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div *ngIf="rowSelectionTable.data.length > 0" class="paging">
+    <p>共 {{ totalAmount }} 条</p>
+    <div class="flex1"></div>
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzPageSize]="perPage"
+      (nzPageSizeChange)="pageSizeChange($event)"
+      (nzPageIndexChange)="pageIndexChange($event)"
+      nzShowSizeChanger
+      [nzTotal]="totalAmount"
+    ></nz-pagination>
+  </div>
+</nz-card>

@@ -1,0 +1,72 @@
+<page-header [title]="'最新消息'"> </page-header>
+<button nz-button [nzType]="'primary'" (click)="toFront()">
+  <i nz-icon type="arrow-left" theme="outline"></i>
+  返回
+</button>
+<nz-card [nzBordered]="false">
+  <nz-table #rowSelectionTable [nzLoading]="loading" [nzData]="dataSet" [nzShowPagination]="false">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>上报人</th>
+        <th>手术编号</th>
+        <th>类型</th>
+        <th>时间</th>
+        <th>详情</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataSet" (click)="clickTr(data, $event)">
+        <td>{{ data.id }}</td>
+        <th>{{ data.name }}</th>
+        <td>{{ data.oid }}</td>
+        <td>{{ data.type }}</td>
+        <td>{{ data.time | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.detail }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+<nz-card [nzBordered]="false">
+  <nz-table #rowSelectionTable [nzLoading]="loading" [nzData]="dataSet" [nzShowPagination]="false">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th >手术编号</th>
+        <th>患者编号</th>
+        <th >患者姓名</th>
+        <th >
+          上报人
+        </th>
+        <th>时间</th>
+        <th>收缩压</th>
+        <th>舒张压</th>
+        <th>心率</th>
+        <th>呼吸</th>
+        <th>体温</th>
+        <th>血氧饱和度</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataSet1" (click)="clickTr(data, $event)">
+        <td>{{ data.id }}</td>
+        <td>{{ data.oid }}</td>
+        <td>{{ data.pid }}</td>
+        <td>{{ data.pname }}</td>
+        <td>{{ data.uname }}</td>
+        <td>{{ data.time | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.systolicPressure }}</td>
+        <td>{{ data.diastolicPressure }}</td>
+        <td>{{ data.heartRate }}</td>
+        <td>{{ data.breath }}</td>
+        <th>{{ data.temperature }}</th>
+        <td>{{ data.spo2 }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+<nz-card [nzBordered]="false">
+  <div class="mb-md" nz-col nzMd="24" nzSm="24" nzXs="24">
+    <linebar [colorsMap]="colorMap" [data]="data5" [height]="200" [title]="'患者实时体征'" showtype="line"></linebar>
+  </div>
+</nz-card>

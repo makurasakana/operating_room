@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>上报手术流程信息</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" th:href="@{/X-admin/css/font.css}">
+    <link rel="stylesheet" th:href="@{/X-admin/css/xadmin.css}">
+    <link rel="stylesheet" th:href="@{/layui/css/layui.css}">
+    <script type="text/javascript" th:src="@{/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/X-admin/js/xadmin.js}" charset="utf-8"></script>
+</head>
+
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-form">
+            <form class="form" th:action="@{/report/add}" method="post"
+                  th:object="${report}" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:field="*{id}">
+                <input type="hidden" name="uid" th:field="*{uid}">
+                <input type="hidden" name="oid" th:field="*{oid}">
+                <input type="hidden" name="time" th:field="*{time}">
+                <input type="hidden" id="state" th:field="*{state}">
+                <div class="layui-form-item">
+                    <label for="type" class="layui-form-label">
+                        <span class="x-red">*</span>种类</label>
+                    <div class="layui-input-inline">
+                        <select th:field="${report.type}" th:value="${report.type}" id="type" name="type" lay-verify="">
+                            <option th:selected="${report.type=='流程'}" value="流程" selected>流程</option>
+                            <option th:selected="${report.type=='环节'}" value="描述">描述</option>
+                            <option th:selected="${report.type=='突发'}" value="突发">突发</option>
+                        </select>
+                    </div>
+                    <div class="layui-form-item">
+                        <label for="detail" class="layui-form-label">
+                            <span class="x-red">*</span>详情</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="detail" name="detail" lay-verify=""
+                                   lay-reqtext="请输入详情" placeholder="请输入" autocomplete="on" class="layui-input"
+                                   style="width: 300px" th:field="*{detail}"></div>
+                    </div>
+                    <fieldset class="layui-elem-field site-demo-button" style="margin-top: 30px;">
+                        <legend>快捷操作</legend>
+                        <div class="layui-form-item">
+                            <button class="layui-btn layui-btn-normal" onclick="quick0()">患者进入手术室</button>
+                            <button class="layui-btn layui-btn-normal" onclick="quick1()">麻醉开始</button>
+                        </div>
+                        <div class="layui-form-item">
+                            <button class="layui-btn layui-btn-normal" onclick="quick2()">手术开始</button>
+                            <button class="layui-btn layui-btn-normal" onclick="quick3()">等待复苏</button>
+                            <button class="layui-btn layui-btn-normal" onclick="quick4()">手术结束</button>
+                        </div>
+                    </fieldset>
+                    <p></p>
+                    <br />
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <button class="layui-btn" lay-filter="submit" lay-submit="" type="submit">保存</button>
+                        <button type="reset" class="layui-btn btn btn-warning">重置</button>
+                    </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            $.ajax({
+                url: "/report/add",
+                type: "post",
+                data: data.field,
+                success: function () {
+                    layer.msg("成功");
+                    xadmin.close();
+                    xadmin.father_reload();
+                },
+                error: function () {
+                    layer.msg("接口异常!");
+                }
+            });
+        });
+    });
+
+    function quick0() {
+        $("#detail").attr("value", "患者进入手术室");
+        $("#state").attr("value", "患者进入手术室");
+        xadmin.close();
+        xadmin.father_reload();
+    }
+    function quick1() {
+        $("#detail").attr("value", "麻醉开始");
+        $("#state").attr("value", "麻醉开始");
+        xadmin.close();
+        xadmin.father_reload();
+    }
+
+    function quick2() {
+        $("#detail").attr("value", "手术开始");
+        $("#state").attr("value", "手术开始");
+        xadmin.close();
+        xadmin.father_reload();
+    }
+
+    function quick3() {
+        $("#detail").attr("value", "等待复苏");
+        $("#state").attr("value", "等待复苏");
+        xadmin.close();
+        xadmin.father_reload();
+    }
+
+    function quick4() {
+        $("#detail").attr("value", "手术结束");
+        $("#state").attr("value", "手术结束");
+        xadmin.close();
+        xadmin.father_reload();
+    }
+</script>
+</body>
+</html>

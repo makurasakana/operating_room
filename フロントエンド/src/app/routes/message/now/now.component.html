@@ -1,0 +1,98 @@
+<page-header [title]="'最新消息'"> </page-header>
+<nz-card [nzBordered]="false">
+  <nz-table #rowSelectionTable [nzLoading]="loading" [nzData]="dataSet" [nzShowPagination]="false">
+    <thead>
+      <tr>
+        <th>序号</th>
+        <th>上报人</th>
+        <th>手术室</th>
+        <th>手术编号</th>
+        <th>类型</th>
+        <th>时间</th>
+        <th>详情</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataSet" (click)="clickTr(data, $event)">
+        <td>{{ data.id }}</td>
+        <th>{{ data.name }}</th>
+        <th>{{ data.location }}</th>
+        <td>{{ data.oid }}</td>
+        <td>{{ data.type }}</td>
+        <td>{{ data.time | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.detail }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</nz-card>
+<div class="content__title">
+  <h1>手术室</h1>
+</div>
+<div nz-row nzGutter="16">
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point" (click)="goTo('1')">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-orange rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.state1 }}</div>
+        <p class="text-nowrap mb0">1号手术室</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point" (click)="goTo('2')">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-primary rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.state2 }}</div>
+        <p class="text-nowrap mb0">2号手术室</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point" (click)="goTo('3')">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-success rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.state3 }}</div>
+        <p class="text-nowrap mb0">3号手术室</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point" (click)="goTo('4')">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-magenta rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.state4 }}</div>
+        <p class="text-nowrap mb0">4号手术室</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div nz-row nzGutter="16">
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point" (click)="goTo('5')">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-orange rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.state5 }}</div>
+        <p class="text-nowrap mb0">5号手术室</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point" (click)="goTo('6')">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-primary rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.state6 }}</div>
+        <p class="text-nowrap mb0">6号手术室</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point" (click)="goTo('7')">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-success rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.state7 }}</div>
+        <p class="text-nowrap mb0">7号手术室</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point" (click)="goTo('8')">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-magenta rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.state8 }}</div>
+        <p class="text-nowrap mb0">8号手术室</p>
+      </div>
+    </div>
+  </div>
+</div>

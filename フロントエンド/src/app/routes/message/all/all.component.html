@@ -1,0 +1,64 @@
+<page-header [title]="'手术上报记录查询'">
+  <form nz-form [nzLayout]="'inline'">
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">手术编号</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <input nz-input [(ngModel)]="_searchOid" />
+      </nz-form-control>
+    </nz-form-item>
+    <button nz-button nzType="primary" (click)="submitForm()" style="margin-top: 4px;">搜索</button>
+    <button nz-button type="button" (click)="resetInfo()" class="mx-sm"><i nz-icon type="redo"></i>重置</button>
+  </form>
+</page-header>
+<nz-card [nzBordered]="false">
+  <nz-table #rowSelectionTable [nzLoading]="loading" [nzData]="dataSet" [nzShowPagination]="false">
+    <thead (nzSortChange)="sortChange($event)">
+      <tr>
+        <th nzShowSort nzSortKey="id">序号</th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfName"
+          (nzFilterChange)="filter($event, searchType)"
+        >
+          上报人
+        </th>
+        <th nzShowSort nzSortKey="pid">手术编号</th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfType"
+          (nzFilterChange)="filter(searchName, $event)"
+        >
+          类型
+        </th>
+        <th nzShowSort nzSortKey="time">时间</th>
+        <th>详情</th>
+        <th>已作废</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataSet" (click)="clickTr(data, $event)">
+        <td>{{ data.id }}</td>
+        <th>{{ data.name }}</th>
+        <td>{{ data.oid }}</td>
+        <td>{{ data.type }}</td>
+        <td>{{ data.time | date: 'yyyy-MM-dd HH:mm:ss' }}</td>
+        <td>{{ data.detail }}</td>
+        <td>{{ data.wasted }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div *ngIf="rowSelectionTable.data.length > 0" class="paging">
+    <p>共 {{ totalAmount }} 条</p>
+    <div class="flex1"></div>
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzPageSize]="perPage"
+      (nzPageSizeChange)="pageSizeChange($event)"
+      (nzPageIndexChange)="pageIndexChange($event)"
+      nzShowSizeChanger
+      [nzTotal]="totalAmount"
+    ></nz-pagination>
+  </div>
+</nz-card>

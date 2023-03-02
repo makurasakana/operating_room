@@ -1,0 +1,119 @@
+<nz-spin [nzSpinning]="dataOnLoading" nzTip="Loading...">
+  <div class="d-flex s-container">
+    <div class="d-flex justify-content-center width-100">
+      <div class="d-flex">
+        <div class="s-left">
+          <div class="d-flex">
+            <button (click)="onClickCreateOrgunit()" nz-button nzBlock nzType="default">创建身份</button>
+            <button (click)="refresh()" nz-button nzType="primary">
+              <i nz-icon nzType="sync"></i>
+            </button>
+          </div>
+          <nz-tree (nzClick)="TreeOnClick($event)" [nzData]="orgunitTreeNodes" nzShowLine></nz-tree>
+        </div>
+        <div class="s-right d-flex flex-column">
+          <div class="d-flex justify-content-between">
+            <div></div>
+            <div class="d-flex">
+              <button (click)="edit()" nz-button nzBlock nzType="primary">保存</button>
+              <button (click)="delete()" nz-button nzBlock nzType="danger">删除</button>
+            </div>
+          </div>
+          <div class="orgunit-info">
+            <div class="d-flex s-form-item">
+              <div class="s-label">身份名称：</div>
+              <div class="s-value">
+                <input [(ngModel)]="orgunitSelectData.orgunit.title" nz-input />
+              </div>
+            </div>
+            <div class="d-flex s-form-item">
+              <div class="s-label">负责人：</div>
+              <div class="s-value">
+                <nz-select [(ngModel)]="orgunitSelectData.orgunit.charge" style="width: 100%">
+                  <nz-option
+                    *ngFor="let option of personList"
+                    [nzLabel]="option.title"
+                    [nzValue]="option.id"
+                  ></nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div class="d-flex s-form-item">
+              <div class="s-label">上级身份：</div>
+              <div class="s-value">
+                <nz-tree-select
+                  [(ngModel)]="orgunitSelectData.orgunit.pid"
+                  [nzNodes]="_orgunitTreeNodes"
+                  nzShowSearch
+                  style="width: 100%"
+                >
+                </nz-tree-select>
+              </div>
+            </div>
+            <div class="d-flex s-form-item">
+              <div class="s-label">备注：</div>
+              <div class="s-value">
+                <textarea [(ngModel)]="orgunitSelectData.orgunit.description" nz-input rows="4"></textarea>
+              </div>
+            </div>
+            <div class="d-flex s-form-item">
+              <div class="s-label">拥有该身份用户：</div>
+              <div class="s-value">
+                <nz-select [(ngModel)]="orgunitSelectData.peoples" nzMode="multiple" style="width: 100%">
+                  <nz-option
+                    *ngFor="let option of personList"
+                    [nzLabel]="option.title"
+                    [nzValue]="option.id"
+                  ></nz-option>
+                </nz-select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-spin>
+
+<nz-modal
+  [(nzVisible)]="isOrgunitVisible"
+  nzTitle="创建身份"
+  (nzOnCancel)="handleModalCancel()"
+  (nzOnOk)="handleModalOk()"
+>
+  <div class="d-flex create-item">
+    <div class="label">身份名称：</div>
+    <div class="width-100">
+      <input [(ngModel)]="createOrgunitData_title" nz-input />
+    </div>
+  </div>
+  <div class="d-flex create-item">
+    <div class="label">负责人：</div>
+    <div class="width-100">
+      <nz-select [(ngModel)]="createOrgunitData_charge" class="width-100">
+        <nz-option *ngFor="let option of personList" [nzLabel]="option.title" [nzValue]="option.id"></nz-option>
+      </nz-select>
+    </div>
+  </div>
+  <div class="d-flex create-item">
+    <div class="label">上级身份：</div>
+    <div class="width-100">
+      <nz-tree-select [(ngModel)]="createOrgunitData_pid" [nzNodes]="_orgunitTreeNodes" class="width-100" nzShowSearch>
+      </nz-tree-select>
+    </div>
+  </div>
+  <div class="d-flex create-item">
+    <div class="label">备注：</div>
+    <div class="width-100">
+      <textarea [(ngModel)]="createOrgunitData_description" nz-input rows="4"></textarea>
+    </div>
+  </div>
+  <div class="d-flex create-item">
+    <div class="label">拥有该身份用户：</div>
+    <div class="width-100">
+      <nz-select [(ngModel)]="createOrgunitData_peoples" class="width-100" nzMode="multiple">
+        <nz-option *ngFor="let option of personList" [nzLabel]="option.title" [nzValue]="option.id"></nz-option>
+      </nz-select>
+    </div>
+  </div>
+</nz-modal>

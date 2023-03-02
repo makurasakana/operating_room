@@ -1,0 +1,51 @@
+<div class="alain-default__content-title">
+  <h1>
+    首页
+    <small>欢迎!</small>
+  </h1>
+</div>
+<div nz-row nzGutter="16">
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-orange rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.currentOperationNum }}</div>
+        <p class="text-nowrap mb0">当前手术数</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-primary rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.userNum }}</div>
+        <p class="text-nowrap mb0">用户人数</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-success rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.patientNum }}</div>
+        <p class="text-nowrap mb0">患者人数</p>
+      </div>
+    </div>
+  </div>
+  <div nz-col nzXs="24" nzSm="12" nzMd="6" class="mb-md point">
+    <div nz-row nzType="flex" nzAlign="middle" class="bg-magenta rounded-md">
+      <div nz-col nzSpan="12" class="p-md text-white">
+        <div class="h2 mt0">{{ this.medicalWorkerNum }}</div>
+        <p class="text-nowrap mb0">医护人员数</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div nz-row nzGutter="16">
+  <div nz-col nzXs="24" nzMd="24">
+    <nz-card [nzBordered]="false" [nzTitle]="operationTitle">
+      <ng-template #operationTitle>
+        手术台数情况
+        <small class="text-sm font-weight-normal"></small>
+      </ng-template>
+      <g2-bar *ngIf="operationData" height="275" [data]="operationData"></g2-bar>
+    </nz-card>
+  </div>
+</div>

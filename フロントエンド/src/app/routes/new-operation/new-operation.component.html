@@ -1,0 +1,21 @@
+<div class="header-return">
+  <page-header [title]="title"></page-header>
+</div>
+<nz-card>
+  <div class="mb-md" nz-col nzMd="10" nzSm="10" nzXs="24">
+    <sf
+      #sf
+      [schema]="schema"
+      [formData]="formData"
+      [layout]="layout"
+      [autocomplete]="'off'"
+      button="none"
+      (formChange)="onFormChange($event)"
+      (formError)="onFormError($event)"
+    >
+    </sf>
+    <div class="d-flex justify-content-end">
+      <button (click)="submit()" nz-button nzType="primary">保存</button>
+    </div>
+  </div>
+</nz-card>

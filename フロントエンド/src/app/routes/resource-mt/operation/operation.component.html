@@ -1,0 +1,214 @@
+<page-header [title]="'手术信息'">
+  <form nz-form [nzLayout]="'inline'">
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">患者</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="请选择"
+          style="width: 200px;margin-left:5px;"
+          [ngModel]="patient"
+          (ngModelChange)="change1($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <nz-option *ngFor="let item of allPatients" [nzLabel]="item.name" [nzValue]="item.code"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">手术名</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="请选择"
+          style="width: 270px;margin-left:5px;"
+          [ngModel]="name"
+          (ngModelChange)="change3($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <nz-option *ngFor="let item of allNames" [nzLabel]="item.name" [nzValue]="item.code"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">麻醉医师</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="请选择"
+          style="width: 200px;margin-left:5px;"
+          [ngModel]="anesthesiologist"
+          (ngModelChange)="change4($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <nz-option *ngFor="let item of allAnesthesiologists" [nzLabel]="item.name" [nzValue]="item.code"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">施术者</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="请选择"
+          style="width: 200px;margin-left:5px;"
+          [ngModel]="operator"
+          (ngModelChange)="change5($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <nz-option *ngFor="let item of allOperators" [nzLabel]="item.name" [nzValue]="item.code"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">巡回护士</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="请选择"
+          style="width: 200px;margin-left:5px;"
+          [ngModel]="circulatingNurse"
+          (ngModelChange)="change6($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <nz-option *ngFor="let item of allCirculatingNurses" [nzLabel]="item.name" [nzValue]="item.code"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="5" [nzXs]="24">日期</nz-form-label>
+      <nz-form-control [nzSm]="19" [nzXs]="24">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          nzPlaceHolder="请选择"
+          style="width: 200px;margin-left:5px;"
+          [ngModel]="startTime"
+          (ngModelChange)="change8($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <nz-option *ngFor="let item of allTimes" [nzLabel]="item.name" [nzValue]="item.code"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <button nz-button nzType="primary" (click)="submitForm()" style="margin-top: 4px;">搜索</button>
+    <button nz-button type="button" (click)="resetInfo()" class="mx-sm"><i nz-icon type="redo"></i>重置</button>
+  </form>
+</page-header>
+<nz-card [nzBordered]="false">
+  <div class="it-group">
+    <div>
+      <button nz-button type="submit" [nzType]="'primary'" (click)="add()">
+        <i nz-icon type="plus" theme="outline"></i>
+        添加
+      </button>
+    </div>
+  </div>
+  <nz-table #rowSelectionTable [nzLoading]="loading" [nzData]="dataSet" [nzShowPagination]="false">
+    <thead (nzSortChange)="sortChange($event)">
+      <tr>
+        <th
+          nzShowCheckbox
+          [(nzChecked)]="allChecked"
+          [nzIndeterminate]="indeterminate"
+          (nzCheckedChange)="checkAll($event)"
+        ></th>
+        <th nzShowSort nzSortKey="id">编号</th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfDept"
+          (nzFilterChange)="filter($event, searchState)"
+        >
+          科室
+        </th>
+        <th nzShowSort nzSortKey="pid">患者编号</th>
+        <th>患者姓名</th>
+        <th nzShowSort nzSortKey="bed">床位号</th>
+        <th nzShowSort nzSortKey="location">手术室</th>
+        <th>诊断</th>
+        <th>手术名称</th>
+        <th>麻醉医师</th>
+        <th>巡回护士</th>
+        <th>施术者</th>
+        <th>协助者</th>
+        <th
+          nzShowFilter
+          [nzFilterMultiple]="false"
+          [nzFilters]="listOfState"
+          (nzFilterChange)="filter(searchDept, $event)"
+        >
+          状态
+        </th>
+        <th nzShowSort nzSortKey="startTime">开始时间</th>
+        <th nzShowSort nzSortKey="endTime">结束时间</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of dataSet" (click)="clickTr(data, $event)">
+        <td
+          nzWidth="70px"
+          nzLeft="0px"
+          nzShowCheckbox
+          [(nzChecked)]="data.checked"
+          (nzCheckedChange)="refreshStatus()"
+        ></td>
+        <td>{{ data.id }}</td>
+        <th>{{ data.dept }}</th>
+        <td>{{ data.pid }}</td>
+        <td>{{ data.pname }}</td>
+        <td>{{ data.bed }}</td>
+        <td>{{ data.location }}</td>
+        <td>{{ data.diagnose }}</td>
+        <td>{{ data.name }}</td>
+        <td>{{ data.anesthesiologist }}</td>
+        <td>{{ data.circulatingNurse }}</td>
+        <td>{{ data.operator }}</td>
+        <td>{{ data.supporter }}</td>
+        <td>{{ data.status }}</td>
+        <td>{{ data.startTime | date: 'yyyy-MM-dd HH:mm:ss':'GMT+08:00' }}</td>
+        <td>{{ data.endTime | date: 'yyyy-MM-dd HH:mm:ss':'GMT+08:00' }}</td>
+        <td>
+          <a
+            (click)="edit(data)"
+            style="padding-right: 8px"
+            nz-tooltip
+            nzTooltipTitle="编辑"
+            nzTooltipPlacement="bottom"
+          >
+            <i nz-icon nzType="edit" nzTheme="outline"></i>
+          </a>
+          <a
+            (nzOnConfirm)="del(data)"
+            nz-popconfirm
+            nzPopconfirmTitle="确定删除?"
+            nzPopconfirmPlacement="bottom"
+            nz-tooltip
+            nzTooltipTitle="删除"
+            nzTooltipPlacement="bottom"
+          >
+            <i nz-icon nzType="delete" nzTheme="outline"></i>
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <div *ngIf="rowSelectionTable.data.length > 0" class="paging">
+    <p>共 {{ totalAmount }} 条</p>
+    <div class="flex1"></div>
+    <nz-pagination
+      [nzPageIndex]="currentPage"
+      [nzPageSize]="perPage"
+      (nzPageSizeChange)="pageSizeChange($event)"
+      (nzPageIndexChange)="pageIndexChange($event)"
+      nzShowSizeChanger
+      [nzTotal]="totalAmount"
+    ></nz-pagination>
+  </div>
+</nz-card>

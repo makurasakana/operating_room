@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" class="x-admin-sm">
+<head>
+    <meta charset="UTF-8">
+    <title>上报患者指标参数</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+    <link rel="stylesheet" th:href="@{/X-admin/css/font.css}">
+    <link rel="stylesheet" th:href="@{/X-admin/css/xadmin.css}">
+    <script type="text/javascript" th:src="@{/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/X-admin/js/xadmin.js}" charset="utf-8"></script>
+</head>
+
+<body>
+<div class="layui-fluid">
+    <div class="layui-row">
+        <div class="layui-form">
+            <form class="form" th:action="@{/status/add}" method="post"
+                  th:object="${status}" enctype="multipart/form-data">
+                <input type="hidden" name="id" th:field="*{id}">
+                <input type="hidden" name="uid" th:field="*{uid}">
+                <input type="hidden" name="oid" th:field="*{oid}">
+                <input type="hidden" name="pid" th:field="*{pid}">
+                <input type="hidden" name="time" th:field="*{time}">
+                <div class="layui-form-item">
+                    <label for="systolicPressure" class="layui-form-label">
+                        <span class="x-red">*</span>收缩压</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="systolicPressure" name="systolicPressure" lay-verify="required|number"
+                               lay-reqtext="请输入收缩压" placeholder="请输入" autocomplete="on" class="layui-input"
+                               style="width: 300px" th:field="*{systolicPressure}"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="diastolicPressure" class="layui-form-label">
+                        <span class="x-red">*</span>舒张压</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="diastolicPressure" name="diastolicPressure" lay-verify="required|number"
+                               lay-reqtext="请输入舒张压" placeholder="请输入" autocomplete="on" class="layui-input"
+                               style="width: 300px" th:field="*{diastolicPressure}"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="heartRate" class="layui-form-label">
+                        <span class="x-red">*</span>心率</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="heartRate" name="heartRate" lay-verify="required|number"
+                               lay-reqtext="请输入心率" placeholder="请输入" autocomplete="on" class="layui-input"
+                               style="width: 300px" th:field="*{heartRate}"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="breath" class="layui-form-label">
+                        <span class="x-red">*</span>呼吸频率</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="breath" name="breath" lay-verify="required|number"
+                               lay-reqtext="请输入呼吸频率" placeholder="请输入" autocomplete="on" class="layui-input"
+                               style="width: 300px" th:field="*{breath}"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="temperature" class="layui-form-label">
+                        <span class="x-red">*</span>体温</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="temperature" name="temperature" lay-verify="required|number"
+                               lay-reqtext="请输入体温" placeholder="请输入" autocomplete="on" class="layui-input"
+                               style="width: 300px" th:field="*{temperature}"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label for="spo2" class="layui-form-label">氧饱和</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="spo2" name="spo2"
+                               lay-reqtext="请输入体温" placeholder="请输入" autocomplete="on" class="layui-input"
+                               style="width: 300px" th:field="*{spo2}"></div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <button class="layui-btn" lay-filter="submit" lay-submit="" type="submit">保存
+                    </button>
+                    <button type="reset" class="layui-btn btn btn-warning">重置</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form,
+            layer = layui.layer;
+
+        //监听提交
+        form.on('submit(submit)', function (data) {
+            $.ajax({
+                url: "/status/add",
+                type: "post",
+                data: data.field,
+                success: function () {
+                    layer.msg("成功");
+                    xadmin.close();
+                    xadmin.father_reload();
+                },
+                error: function () {
+                    layer.msg("接口异常!");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
